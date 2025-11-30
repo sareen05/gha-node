@@ -6,37 +6,23 @@ on:
     branches: [ main ]
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
-    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
     - name: Setup  Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: Install deps
       run: npm ci
     
     - name: Lint 
       run: npm run lint   
-  
-  test:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-    - name: Setup  Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'npm'
-        
-    - name: Install deps
-      run: npm ci
-
     - name: Run Tests
       run: npm test
